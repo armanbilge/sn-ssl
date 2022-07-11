@@ -28,6 +28,7 @@ lazy val tests = crossProject(NativePlatform, JVMPlatform)
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
   )
   .jvmSettings(
+    fork := true,
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.13.2" % Test,
       "com.github.sbt" % "junit-interface" % "0.13.3" % Test
