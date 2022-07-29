@@ -20,20 +20,21 @@ import java.util.Enumeration
 import java.util.HashMap
 import javax.net.ssl.SSLSession
 import javax.net.ssl.SSLSessionContext
+import scala.collection.immutable.ArraySeq
 
 abstract class OpenSSLSessionContext extends SSLSessionContext {
 
-  private[this] val sessions = new HashMap[Array[Byte], SSLSession]
+  private[this] val sessions = new HashMap[ArraySeq.ofByte, SSLSession]
 
   override def getSession(sessionId: Array[Byte]): SSLSession =
-    sessions.get(sessionId)
+    sessions.get(ArraySeq.unsafeWrapArray(sessionId))
 
   override def getIds(): Enumeration[Array[Byte]] = {
     val iter = sessions.keySet().iterator()
     new Enumeration[Array[Byte]] {
       override def hasMoreElements(): Boolean = iter.hasNext()
       override def nextElement(): Array[Byte] =
-        iter.next()
+        iter.next().unsafeArray
     }
   }
 
